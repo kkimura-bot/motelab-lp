@@ -1,0 +1,2152 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MOTE LAB — マッチはする。でも、2回目がない。</title>
+  <meta name="description" content="マッチングアプリ3年、マッチはするのに2回目のデートに繋がらない。MOTE LABは魅力を59の行動に分解し、女性トレーナーが採点する。答え合わせから、変わる。">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&family=Noto+Sans+JP:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+
+  <style>
+    /* =============================================
+       CSS Variables
+    ============================================= */
+    :root {
+      --navy:    #1F3A5F;
+      --gold:    #C8A04D;
+      --marker:  #FFE872;
+      --white:   #FFFFFF;
+      --offwhite: #FAFAF8;
+      --gray-bg: #F3F3F1;
+      --text:    #1A1A1A;
+      --muted:   #5A6370;
+      --border:  rgba(31,58,95,0.10);
+      --radius:  12px;
+      --font:    'Inter', 'Noto Sans JP', sans-serif;
+      --max-w:   1040px;
+      --shadow:  0 2px 18px rgba(31,58,95,0.08);
+      --shadow-lg: 0 8px 40px rgba(31,58,95,0.14);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; font-size: 16px; }
+
+    body {
+      font-family: var(--font);
+      background: var(--offwhite);
+      color: var(--text);
+      line-height: 1.75;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    img { display: block; max-width: 100%; }
+    a { color: inherit; text-decoration: none; }
+
+    .container {
+      max-width: var(--max-w);
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* マーカー強調 */
+    .marker {
+      background: linear-gradient(transparent 55%, var(--marker) 55%);
+      display: inline;
+    }
+
+    /* =============================================
+       固定CTAバー（スクロール出現）
+    ============================================= */
+    .sticky-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 200;
+      background: var(--gold);
+      padding: 14px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      box-shadow: 0 -4px 20px rgba(0,0,0,0.18);
+      transform: translateY(100%);
+      transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .sticky-bar.visible {
+      transform: translateY(0);
+    }
+
+    .sticky-bar__text {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--navy);
+      letter-spacing: 0.02em;
+    }
+
+    .sticky-bar__btn {
+      display: inline-block;
+      background: var(--navy);
+      color: var(--white);
+      font-size: 14px;
+      font-weight: 700;
+      padding: 10px 28px;
+      border-radius: 100px;
+      letter-spacing: 0.03em;
+      white-space: nowrap;
+      transition: opacity 0.2s;
+    }
+
+    .sticky-bar__btn:hover { opacity: 0.85; }
+
+    /* =============================================
+       ナビ
+    ============================================= */
+    .nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      background: rgba(31,58,95,0.92);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+    }
+
+    .nav__inner {
+      max-width: var(--max-w);
+      margin: 0 auto;
+      padding: 0 24px;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .nav__logo {
+      font-weight: 900;
+      font-size: 17px;
+      letter-spacing: 0.14em;
+      color: var(--white);
+    }
+
+    .nav__logo span {
+      color: var(--gold);
+      font-size: 11px;
+      font-weight: 400;
+      margin-left: 10px;
+      letter-spacing: 0.04em;
+    }
+
+    .nav__cta {
+      font-size: 13px;
+      font-weight: 700;
+      background: var(--gold);
+      color: var(--navy);
+      padding: 8px 20px;
+      border-radius: 100px;
+      transition: opacity 0.2s;
+    }
+
+    .nav__cta:hover { opacity: 0.88; }
+
+    /* =============================================
+       ボタン共通
+    ============================================= */
+    .btn-gold {
+      display: inline-block;
+      background: var(--gold);
+      color: var(--navy);
+      font-size: 16px;
+      font-weight: 700;
+      padding: 18px 48px;
+      border-radius: 100px;
+      letter-spacing: 0.03em;
+      transition: opacity 0.2s, transform 0.2s;
+      cursor: pointer;
+    }
+
+    .btn-gold:hover { opacity: 0.88; transform: translateY(-2px); }
+
+    .btn-ghost {
+      display: inline-block;
+      border: 2px solid var(--white);
+      color: var(--white);
+      font-size: 14px;
+      font-weight: 700;
+      padding: 12px 32px;
+      border-radius: 100px;
+      letter-spacing: 0.03em;
+      transition: background 0.2s;
+    }
+
+    .btn-ghost:hover { background: rgba(255,255,255,0.1); }
+
+    /* =============================================
+       1. HERO（ダークシネマティック）
+    ============================================= */
+    .hero {
+      min-height: 100vh;
+      padding-top: 56px;
+      position: relative;
+      overflow: hidden;
+      background: #0a0e14;
+      display: flex;
+      align-items: center;
+    }
+
+    .hero__bg {
+      position: absolute;
+      inset: 0;
+      background-image: url('images/hero-man.png');
+      background-size: cover;
+      background-position: center 30%;
+      opacity: 0.45;
+    }
+
+    /* 暗部グラデーションオーバーレイ */
+    .hero__overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        100deg,
+        rgba(10,14,20,0.88) 0%,
+        rgba(10,14,20,0.70) 45%,
+        rgba(10,14,20,0.20) 100%
+      );
+    }
+
+    .hero__inner {
+      position: relative;
+      z-index: 1;
+      max-width: var(--max-w);
+      margin: 0 auto;
+      padding: 80px 24px 100px;
+      max-width: 640px;
+      width: 100%;
+    }
+
+    .hero__eyebrow {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 24px;
+      opacity: 0.85;
+    }
+
+    .hero__catch {
+      font-size: clamp(36px, 6vw, 70px);
+      font-weight: 900;
+      color: var(--white);
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+      margin-bottom: 28px;
+    }
+
+    .hero__catch em {
+      font-style: normal;
+      color: var(--gold);
+    }
+
+    .hero__sub {
+      font-size: clamp(15px, 1.8vw, 18px);
+      font-weight: 400;
+      color: rgba(255,255,255,0.72);
+      line-height: 1.85;
+      margin-bottom: 44px;
+      max-width: 480px;
+    }
+
+    .hero__cta-wrap {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .hero__free-note {
+      font-size: 12px;
+      color: rgba(255,255,255,0.50);
+    }
+
+    /* =============================================
+       2. あるある共感ブロック（チェックリスト）
+    ============================================= */
+    .checklist {
+      background: var(--white);
+      padding: 88px 24px;
+    }
+
+    .checklist__inner {
+      max-width: 720px;
+      margin: 0 auto;
+    }
+
+    .checklist__pre {
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      color: var(--navy);
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    .checklist__heading {
+      font-size: clamp(22px, 3vw, 32px);
+      font-weight: 900;
+      color: var(--navy);
+      margin-bottom: 40px;
+      line-height: 1.4;
+    }
+
+    .checklist__list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+
+    .checklist__item {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      padding: 20px 28px;
+      border-bottom: 1px solid var(--border);
+      background: var(--white);
+      transition: background 0.15s;
+    }
+
+    .checklist__item:last-child { border-bottom: none; }
+
+    .checklist__item:hover { background: #FFFDF5; }
+
+    .checklist__box {
+      width: 22px;
+      height: 22px;
+      border: 2px solid var(--navy);
+      border-radius: 4px;
+      flex-shrink: 0;
+      margin-top: 2px;
+      position: relative;
+    }
+
+    .checklist__text {
+      font-size: 16px;
+      font-weight: 500;
+      color: var(--text);
+      line-height: 1.65;
+    }
+
+    .checklist__post {
+      margin-top: 36px;
+      font-size: 15px;
+      color: var(--muted);
+      line-height: 1.85;
+    }
+
+    /* =============================================
+       3. 問題の再定義（1カラム・告白調）
+    ============================================= */
+    .reframe {
+      background: var(--offwhite);
+      padding: 112px 24px;
+    }
+
+    .reframe__inner {
+      max-width: 640px;
+      margin: 0 auto;
+    }
+
+    .reframe__pre {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 36px;
+    }
+
+    .reframe__heading {
+      font-size: clamp(28px, 4vw, 46px);
+      font-weight: 900;
+      color: var(--navy);
+      line-height: 1.3;
+      letter-spacing: -0.02em;
+      margin-bottom: 44px;
+    }
+
+    .reframe__body {
+      font-size: 17px;
+      color: var(--text);
+      line-height: 2.0;
+    }
+
+    .reframe__body p {
+      margin-bottom: 24px;
+    }
+
+    .reframe__body p:last-child { margin-bottom: 0; }
+
+    .reframe__rule {
+      margin-top: 48px;
+      border-top: 1px solid var(--border);
+      padding-top: 40px;
+    }
+
+    .reframe__rule-text {
+      font-size: 22px;
+      font-weight: 900;
+      color: var(--navy);
+      line-height: 1.5;
+    }
+
+    /* =============================================
+       4. MOTEスコア（両面スコアカード UI）
+    ============================================= */
+    .score-sec {
+      background: var(--gray-bg);
+      padding: 100px 24px;
+    }
+
+    .score-sec__inner {
+      max-width: var(--max-w);
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 64px;
+      align-items: start;
+    }
+
+    .score-sec__left {}
+
+    .score-sec__pre {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--navy);
+      margin-bottom: 12px;
+    }
+
+    .score-sec__heading {
+      font-size: clamp(24px, 3.2vw, 38px);
+      font-weight: 900;
+      color: var(--navy);
+      line-height: 1.3;
+      margin-bottom: 28px;
+    }
+
+    .score-sec__body {
+      font-size: 16px;
+      color: var(--muted);
+      line-height: 1.9;
+      margin-bottom: 28px;
+    }
+
+    .score-sec__nums {
+      display: flex;
+      gap: 28px;
+      margin-bottom: 32px;
+    }
+
+    .score-num {
+      text-align: center;
+    }
+
+    .score-num__val {
+      font-size: 40px;
+      font-weight: 900;
+      color: var(--navy);
+      line-height: 1;
+    }
+
+    .score-num__label {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 4px;
+      line-height: 1.4;
+    }
+
+    /* スコアカードUI */
+    .dual-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .dual-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: var(--gold);
+    }
+
+    .dual-card__header {
+      padding: 24px 28px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+
+    .dual-card__label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+
+    .dual-card__name {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--navy);
+    }
+
+    .dual-card__total {
+      text-align: right;
+    }
+
+    .dual-card__total-num {
+      font-size: 52px;
+      font-weight: 900;
+      color: var(--navy);
+      line-height: 1;
+      letter-spacing: -0.03em;
+    }
+
+    .dual-card__total-max {
+      font-size: 16px;
+      color: var(--muted);
+      font-weight: 400;
+    }
+
+    .dual-card__divider {
+      height: 1px;
+      background: var(--border);
+      margin: 0 28px;
+    }
+
+    .dual-card__col-heads {
+      display: grid;
+      grid-template-columns: 1fr 56px 72px 60px;
+      gap: 8px;
+      padding: 10px 28px 6px;
+    }
+
+    .dual-card__col-h {
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    .dual-card__col-h:first-child { text-align: left; }
+
+    .score-row {
+      display: grid;
+      grid-template-columns: 1fr 56px 72px 60px;
+      gap: 8px;
+      align-items: center;
+      padding: 13px 28px;
+      border-top: 1px solid rgba(31,58,95,0.05);
+    }
+
+    .score-row__name {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text);
+      line-height: 1.4;
+    }
+
+    .score-row__sub {
+      font-size: 10px;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    .score-row__cell {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+    }
+
+    .score-row__num {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--navy);
+      line-height: 1;
+    }
+
+    .score-row__cap {
+      font-size: 9px;
+      color: var(--muted);
+    }
+
+    .gap-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 700;
+      width: 44px;
+      height: 24px;
+      border-radius: 100px;
+      margin: auto;
+    }
+
+    .gap-badge--neg { background: rgba(192,80,77,0.10); color: #A63A38; }
+    .gap-badge--zero { background: rgba(156,163,175,0.15); color: #9CA3AF; }
+    .gap-badge--pos { background: rgba(31,58,95,0.10); color: var(--navy); }
+
+    .dual-card__footer {
+      padding: 14px 28px;
+      background: var(--gray-bg);
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    /* =============================================
+       5. ビフォーアフター（最重要セクション）
+    ============================================= */
+    .beforeafter {
+      background: var(--white);
+      padding: 0;
+    }
+
+    .beforeafter__top {
+      padding: 100px 24px 0;
+    }
+
+    .beforeafter__pre {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 12px;
+      text-align: center;
+    }
+
+    .beforeafter__heading {
+      font-size: clamp(26px, 4vw, 48px);
+      font-weight: 900;
+      color: var(--navy);
+      text-align: center;
+      line-height: 1.3;
+      margin-bottom: 16px;
+    }
+
+    .beforeafter__sub {
+      font-size: 16px;
+      color: var(--muted);
+      text-align: center;
+      margin-bottom: 64px;
+      line-height: 1.8;
+    }
+
+    /* 写真フルワイド */
+    .beforeafter__photo {
+      width: 100%;
+      max-height: 520px;
+      object-fit: cover;
+      object-position: center 20%;
+    }
+
+    /* スコア遷移・内訳 */
+    .beforeafter__data {
+      padding: 64px 24px 100px;
+    }
+
+    .beforeafter__data-inner {
+      max-width: var(--max-w);
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 64px;
+      align-items: start;
+    }
+
+    /* 総合スコア遷移 */
+    .ba-score {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      margin-bottom: 40px;
+    }
+
+    .ba-score__num {
+      text-align: center;
+    }
+
+    .ba-score__val {
+      font-size: 72px;
+      font-weight: 900;
+      line-height: 1;
+      letter-spacing: -0.03em;
+    }
+
+    .ba-score__val--before { color: #B0B8C2; }
+    .ba-score__val--after  { color: var(--navy); }
+
+    .ba-score__label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    .ba-score__arrow {
+      font-size: 28px;
+      color: var(--navy);
+      font-weight: 900;
+    }
+
+    .ba-score__period {
+      font-size: 13px;
+      color: var(--muted);
+      font-weight: 700;
+      background: var(--gray-bg);
+      padding: 6px 16px;
+      border-radius: 100px;
+      white-space: nowrap;
+    }
+
+    /* 内訳バー */
+    .ba-bars {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .ba-bar {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .ba-bar__head {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+    }
+
+    .ba-bar__name {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .ba-bar__vals {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .ba-bar__track {
+      height: 8px;
+      background: var(--gray-bg);
+      border-radius: 100px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .ba-bar__before {
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      background: #C5CDD8;
+      border-radius: 100px;
+      transition: width 1s ease;
+    }
+
+    .ba-bar__after {
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      background: var(--navy);
+      border-radius: 100px;
+      transition: width 1s ease;
+    }
+
+    /* 右側：ストーリー */
+    .ba-story {}
+
+    .ba-story__quote {
+      font-size: 17px;
+      color: var(--text);
+      line-height: 2.0;
+      border-left: 3px solid var(--gold);
+      padding-left: 24px;
+      margin-bottom: 28px;
+    }
+
+    .ba-story__attr {
+      font-size: 12px;
+      color: var(--muted);
+      padding-left: 24px;
+    }
+
+    .ba-story__note {
+      margin-top: 32px;
+      padding: 16px 20px;
+      background: var(--gray-bg);
+      border-radius: 8px;
+      font-size: 11px;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    /* =============================================
+       6. 体験者の声（不揃いカード）
+    ============================================= */
+    .voices {
+      background: var(--gray-bg);
+      padding: 100px 24px;
+    }
+
+    .voices__inner {
+      max-width: var(--max-w);
+      margin: 0 auto;
+    }
+
+    .voices__pre {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 12px;
+    }
+
+    .voices__heading {
+      font-size: clamp(24px, 3.2vw, 38px);
+      font-weight: 900;
+      color: var(--navy);
+      margin-bottom: 56px;
+      line-height: 1.3;
+    }
+
+    /* 不揃いレイアウト */
+    .voices__grid {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr 1fr;
+      gap: 20px;
+      align-items: start;
+    }
+
+    .voice-card {
+      background: var(--white);
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+
+    .voice-card__photo {
+      width: 100%;
+      aspect-ratio: 4/3;
+      object-fit: cover;
+      object-position: center top;
+    }
+
+    .voice-card__body {
+      padding: 24px 24px 28px;
+    }
+
+    .voice-card__quote {
+      font-size: 15px;
+      color: var(--text);
+      line-height: 1.85;
+      margin-bottom: 20px;
+    }
+
+    .voice-card__quote::before {
+      content: '"';
+      font-size: 32px;
+      color: var(--navy);
+      line-height: 0;
+      vertical-align: -12px;
+      margin-right: 4px;
+    }
+
+    .voice-card__meta {
+      border-top: 1px solid var(--border);
+      padding-top: 16px;
+    }
+
+    .voice-card__name {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--navy);
+    }
+
+    .voice-card__detail {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    .voices__note {
+      margin-top: 32px;
+      font-size: 11px;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    /* =============================================
+       7. プログラム内容（5つの処方手段）
+    ============================================= */
+    .program {
+      background: var(--white);
+      padding: 100px 24px;
+    }
+
+    .program__inner {
+      max-width: var(--max-w);
+      margin: 0 auto;
+    }
+
+    .program__pre {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 12px;
+    }
+
+    .program__heading {
+      font-size: clamp(24px, 3.2vw, 38px);
+      font-weight: 900;
+      color: var(--navy);
+      margin-bottom: 16px;
+      line-height: 1.3;
+    }
+
+    .program__lead {
+      font-size: 16px;
+      color: var(--muted);
+      margin-bottom: 64px;
+      line-height: 1.8;
+      max-width: 560px;
+    }
+
+    /* ジグザグ1：セッション写真 */
+    .program__feature {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 56px;
+      align-items: center;
+      margin-bottom: 72px;
+    }
+
+    .program__feature--reverse {
+      direction: rtl;
+    }
+
+    .program__feature--reverse > * {
+      direction: ltr;
+    }
+
+    .program__feature-img {
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow-lg);
+    }
+
+    .program__feature-img img {
+      width: 100%;
+      aspect-ratio: 4/3;
+      object-fit: cover;
+    }
+
+    .program__feature-pre {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--navy);
+      margin-bottom: 12px;
+    }
+
+    .program__feature-heading {
+      font-size: clamp(20px, 2.8vw, 30px);
+      font-weight: 900;
+      color: var(--navy);
+      line-height: 1.35;
+      margin-bottom: 20px;
+    }
+
+    .program__feature-body {
+      font-size: 15px;
+      color: var(--muted);
+      line-height: 1.9;
+    }
+
+    /* 残り3つのコンパクト */
+    .program__compact {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    .program-item {
+      background: var(--gray-bg);
+      border-radius: var(--radius);
+      padding: 28px 24px;
+    }
+
+    .program-item__num {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      color: var(--muted);
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    .program-item__title {
+      font-size: 16px;
+      font-weight: 900;
+      color: var(--navy);
+      margin-bottom: 10px;
+      line-height: 1.4;
+    }
+
+    .program-item__body {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.8;
+    }
+
+    /* =============================================
+       8. 流れ（無料診断→M6）
+    ============================================= */
+    .flow {
+      background: var(--navy);
+      padding: 100px 24px;
+    }
+
+    .flow__inner {
+      max-width: var(--max-w);
+      margin: 0 auto;
+    }
+
+    .flow__pre {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 12px;
+    }
+
+    .flow__heading {
+      font-size: clamp(24px, 3.2vw, 38px);
+      font-weight: 900;
+      color: var(--white);
+      margin-bottom: 56px;
+      line-height: 1.3;
+    }
+
+    .flow__steps {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 0;
+      position: relative;
+    }
+
+    .flow__steps::before {
+      content: '';
+      position: absolute;
+      top: 26px;
+      left: calc(10% + 16px);
+      right: calc(10% + 16px);
+      height: 1px;
+      background: rgba(200,160,77,0.25);
+    }
+
+    .flow-step {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding: 0 8px;
+    }
+
+    .flow-step__node {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      border: 2px solid rgba(200,160,77,0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+      position: relative;
+      z-index: 1;
+      background: var(--navy);
+    }
+
+    .flow-step--highlight .flow-step__node {
+      background: var(--gold);
+      border-color: var(--gold);
+    }
+
+    .flow-step__m {
+      font-size: 13px;
+      font-weight: 700;
+      color: rgba(255,255,255,0.6);
+    }
+
+    .flow-step--highlight .flow-step__m {
+      color: var(--navy);
+    }
+
+    .flow-step__title {
+      font-size: 12px;
+      font-weight: 900;
+      color: var(--white);
+      margin-bottom: 6px;
+      line-height: 1.4;
+    }
+
+    .flow-step__body {
+      font-size: 11px;
+      color: rgba(255,255,255,0.5);
+      line-height: 1.65;
+    }
+
+    .flow__note {
+      margin-top: 48px;
+      padding-top: 40px;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      font-size: 14px;
+      color: rgba(255,255,255,0.55);
+      line-height: 1.85;
+      max-width: 600px;
+    }
+
+    .flow__note strong {
+      color: var(--gold);
+      font-weight: 700;
+    }
+
+    /* =============================================
+       9. FAQ（アコーディオン）
+    ============================================= */
+    .faq {
+      background: var(--offwhite);
+      padding: 100px 24px;
+    }
+
+    .faq__inner {
+      max-width: 720px;
+      margin: 0 auto;
+    }
+
+    .faq__pre {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 12px;
+    }
+
+    .faq__heading {
+      font-size: clamp(24px, 3.2vw, 38px);
+      font-weight: 900;
+      color: var(--navy);
+      margin-bottom: 56px;
+      line-height: 1.3;
+    }
+
+    .faq__list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    details.faq-item {
+      border-bottom: 1px solid var(--border);
+    }
+
+    details.faq-item:first-of-type {
+      border-top: 1px solid var(--border);
+    }
+
+    summary.faq-item__q {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 20px;
+      padding: 24px 4px;
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--navy);
+      cursor: pointer;
+      list-style: none;
+      line-height: 1.5;
+    }
+
+    summary.faq-item__q::-webkit-details-marker { display: none; }
+
+    summary.faq-item__q::after {
+      content: '+';
+      font-size: 22px;
+      font-weight: 300;
+      color: var(--muted);
+      flex-shrink: 0;
+      margin-top: -2px;
+      transition: transform 0.25s;
+    }
+
+    details[open] summary.faq-item__q::after {
+      transform: rotate(45deg);
+    }
+
+    .faq-item__a {
+      padding: 0 4px 28px;
+      font-size: 15px;
+      color: var(--muted);
+      line-height: 1.9;
+    }
+
+    /* =============================================
+       10. 最後のCTA（Navy・感情で締め）
+    ============================================= */
+    .cta-final {
+      background: var(--navy);
+      padding: 120px 24px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cta-final::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+      opacity: 0.6;
+    }
+
+    /* 背景の淡い水紋 */
+    .cta-final__bg-circle {
+      position: absolute;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(200,160,77,0.06) 0%, transparent 70%);
+    }
+
+    .cta-final__bg-circle--1 {
+      width: 800px; height: 800px;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .cta-final__inner {
+      position: relative;
+      z-index: 1;
+      max-width: 640px;
+      margin: 0 auto;
+    }
+
+    .cta-final__pre {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: rgba(200,160,77,0.7);
+      margin-bottom: 28px;
+    }
+
+    .cta-final__heading {
+      font-size: clamp(24px, 4vw, 46px);
+      font-weight: 900;
+      color: var(--white);
+      line-height: 1.35;
+      letter-spacing: -0.01em;
+      margin-bottom: 20px;
+    }
+
+    .cta-final__heading em {
+      font-style: normal;
+      color: var(--gold);
+    }
+
+    .cta-final__sub {
+      font-size: 15px;
+      color: rgba(255,255,255,0.58);
+      line-height: 1.85;
+      margin-bottom: 52px;
+    }
+
+    .cta-final__note {
+      margin-top: 20px;
+      font-size: 12px;
+      color: rgba(255,255,255,0.62);
+    }
+
+    /* =============================================
+       11. Footer
+    ============================================= */
+    .footer {
+      background: var(--navy);
+      border-top: 1px solid rgba(255,255,255,0.07);
+      padding: 48px 24px 36px;
+    }
+
+    .footer__inner {
+      max-width: var(--max-w);
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      flex-wrap: wrap;
+      gap: 28px;
+    }
+
+    .footer__logo {
+      font-weight: 900;
+      font-size: 20px;
+      letter-spacing: 0.14em;
+      color: var(--white);
+      margin-bottom: 6px;
+    }
+
+    .footer__company {
+      font-size: 12px;
+      color: rgba(255,255,255,0.65);
+    }
+
+    .footer__links {
+      display: flex;
+      gap: 24px;
+      list-style: none;
+      flex-wrap: wrap;
+    }
+
+    .footer__links a {
+      font-size: 12px;
+      color: rgba(255,255,255,0.68);
+      transition: color 0.2s;
+    }
+
+    .footer__links a:hover { color: rgba(255,255,255,0.8); }
+
+    .footer__copy {
+      width: 100%;
+      padding-top: 28px;
+      border-top: 1px solid rgba(255,255,255,0.06);
+      font-size: 11px;
+      color: rgba(255,255,255,0.55);
+    }
+
+    /* =============================================
+       レスポンシブ（768px）
+    ============================================= */
+    @media (max-width: 768px) {
+      .nav__logo span { display: none; }
+
+      .hero__inner {
+        padding: 72px 20px 88px;
+      }
+
+      .hero__catch { font-size: clamp(32px, 8vw, 48px); }
+
+      .score-sec__inner {
+        grid-template-columns: 1fr;
+        gap: 40px;
+      }
+
+      .beforeafter__data-inner {
+        grid-template-columns: 1fr;
+        gap: 40px;
+      }
+
+      .ba-score__val { font-size: 52px; }
+
+      .voices__grid {
+        grid-template-columns: 1fr;
+      }
+
+      .program__feature {
+        grid-template-columns: 1fr;
+        gap: 32px;
+      }
+
+      .program__feature--reverse { direction: ltr; }
+
+      .program__compact {
+        grid-template-columns: 1fr;
+      }
+
+      .flow__steps {
+        grid-template-columns: 1fr;
+        gap: 28px;
+      }
+
+      .flow__steps::before { display: none; }
+
+      .flow-step {
+        flex-direction: row;
+        text-align: left;
+        gap: 20px;
+      }
+
+      .flow-step__node { flex-shrink: 0; margin-bottom: 0; }
+
+      .sticky-bar {
+        flex-direction: column;
+        gap: 10px;
+        padding: 16px 20px;
+      }
+
+      .sticky-bar__text { text-align: center; font-size: 13px; }
+
+      .dual-card__col-heads,
+      .score-row {
+        grid-template-columns: 1fr 48px 60px 52px;
+      }
+    }
+
+    /* =============================================
+       レスポンシブ（480px）
+    ============================================= */
+    @media (max-width: 480px) {
+      .hero__catch { font-size: 32px; }
+      .hero__cta-wrap { flex-direction: column; align-items: flex-start; }
+      .beforeafter__photo { max-height: 280px; }
+      .faq-item__q { font-size: 15px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- =============================================
+       固定CTAバー
+  ============================================= -->
+  <div class="sticky-bar" id="stickyBar">
+    <span class="sticky-bar__text">無料でMOTEスコア診断を受ける</span>
+    <a href="#cta-final" class="sticky-bar__btn">診断を始める（無料）</a>
+  </div>
+
+  <!-- =============================================
+       ナビ
+  ============================================= -->
+  <nav class="nav">
+    <div class="nav__inner">
+      <div class="nav__logo">MOTE LAB<span>魅力は、行動で変えられる</span></div>
+      <a href="#cta-final" class="nav__cta">無料診断</a>
+    </div>
+  </nav>
+
+  <!-- =============================================
+       1. HERO
+  ============================================= -->
+  <section class="hero" id="top">
+    <div class="hero__bg"></div>
+    <div class="hero__overlay"></div>
+    <div class="hero__inner">
+      <p class="hero__eyebrow">MOTE LAB</p>
+      <h1 class="hero__catch">
+        マッチはする。<br>
+        でも、<em>2回目がない。</em>
+      </h1>
+      <p class="hero__sub">
+        「いい人なんだけど」で終わる理由を、誰もあなたに言ってくれない。<br>
+        MOTE LABは、それを数字で言う。
+      </p>
+      <div class="hero__cta-wrap">
+        <a href="#cta-final" class="btn-gold">無料でMOTEスコア診断を受ける</a>
+        <span class="hero__free-note">診断だけで終わってもいい。まず数字を知ってほしい。</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- =============================================
+       2. あるある共感ブロック
+  ============================================= -->
+  <section class="checklist" id="checklist">
+    <div class="checklist__inner">
+      <p class="checklist__pre">あなたに当てはまる？</p>
+      <h2 class="checklist__heading">
+        ひとつでも当てはまったら、<br>
+        <span class="marker">読み進めてほしい。</span>
+      </h2>
+      <ul class="checklist__list">
+        <li class="checklist__item">
+          <div class="checklist__box"></div>
+          <p class="checklist__text">初回デートのあと、返信が遅くなって自然消滅する</p>
+        </li>
+        <li class="checklist__item">
+          <div class="checklist__box"></div>
+          <p class="checklist__text">会話が面接みたいになる。何を話せばいいか、毎回考えすぎる</p>
+        </li>
+        <li class="checklist__item">
+          <div class="checklist__box"></div>
+          <p class="checklist__text">「友達としては最高」と言われる。褒めてるのか断ってるのかわからない</p>
+        </li>
+        <li class="checklist__item">
+          <div class="checklist__box"></div>
+          <p class="checklist__text">何を直せばいいか、<strong>具体的に言われたことが一度もない</strong></p>
+        </li>
+        <li class="checklist__item">
+          <div class="checklist__box"></div>
+          <p class="checklist__text">「清潔感を磨こう」と言われても、何をどうすればいいかわからない</p>
+        </li>
+      </ul>
+      <p class="checklist__post">
+        正直、<strong>これは努力が足りない話じゃない</strong>と思う。<br>
+        努力はしている。でも、どこに向かって努力すればいいかが、誰にも教えてもらえていない。
+      </p>
+    </div>
+  </section>
+
+  <!-- =============================================
+       3. 問題の再定義
+  ============================================= -->
+  <section class="reframe" id="reframe">
+    <div class="reframe__inner">
+      <p class="reframe__pre">The Real Problem</p>
+      <h2 class="reframe__heading">
+        あなたに足りないのは、<br>
+        努力じゃない。<br>
+        <span class="marker">答え合わせ</span>だ。
+      </h2>
+      <div class="reframe__body">
+        <p>
+          本を読んだ。YouTubeも見た。「清潔感が大事」「聞き上手になろう」「自信を持て」——
+          全部正しいことが書いてある。だから何も変わらなかった。
+        </p>
+        <p>
+          それは<strong>一般論</strong>だからだ。「あなたの場合、どこが具体的に減点されているか」は、
+          どの本にも動画にも書いていない。書けるはずがない。あなたのことを見ていないから。
+        </p>
+        <p>
+          自己流の努力が空回りするのは、当然だ。
+          正しい課題を知らないまま動いているんだから。
+        </p>
+      </div>
+      <div class="reframe__rule">
+        <p class="reframe__rule-text">
+          変わるために必要なのは、<br>
+          「<span class="marker">自分の現在地を正確に知ること</span>」、それだけだ。
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- =============================================
+       4. MOTEスコア（両面スコアカードUI）
+  ============================================= -->
+  <section class="score-sec" id="score">
+    <div class="score-sec__inner">
+
+      <div class="score-sec__left">
+        <p class="score-sec__pre">MOTE Score System</p>
+        <h2 class="score-sec__heading">
+          魅力を<span class="marker">59の行動</span>に分解して、<br>
+          女性トレーナーが採点する。
+        </h2>
+        <p class="score-sec__body">
+          「なんとなくモテない」を終わらせる唯一の方法は、数値化だ。
+          外見・会話・態度・空間づくり——
+          すべてを観察可能な59の行動に落とし込んでいる。
+        </p>
+        <p class="score-sec__body">
+          <strong>両面スコアカード</strong>は、あなたの自己採点と女性トレーナーの採点を同じカードに並べる。
+          そのズレが<em>「伸びしろ」</em>だ。
+          ここに初めて、具体的に動ける課題が生まれる。
+        </p>
+        <div class="score-sec__nums">
+          <div class="score-num">
+            <div class="score-num__val">59</div>
+            <div class="score-num__label">測定項目数</div>
+          </div>
+          <div class="score-num">
+            <div class="score-num__val">2</div>
+            <div class="score-num__label">採点者<br>（自分＋トレーナー）</div>
+          </div>
+          <div class="score-num">
+            <div class="score-num__val">6</div>
+            <div class="score-num__label">ヶ月プログラム</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 両面スコアカードUI -->
+      <div class="dual-card">
+        <div class="dual-card__header">
+          <div>
+            <p class="dual-card__label">MOTEスコア — 診断結果</p>
+            <p class="dual-card__name">M0 フル診断</p>
+          </div>
+          <div class="dual-card__total">
+            <div>
+              <span class="dual-card__total-num">54</span>
+              <span class="dual-card__total-max">/ 100</span>
+            </div>
+          </div>
+        </div>
+        <div class="dual-card__divider"></div>
+
+        <div class="dual-card__col-heads">
+          <span class="dual-card__col-h">指標</span>
+          <span class="dual-card__col-h">自分</span>
+          <span class="dual-card__col-h">トレーナー</span>
+          <span class="dual-card__col-h">ギャップ</span>
+        </div>
+
+        <div class="score-row">
+          <div>
+            <div class="score-row__name">清潔感・肌・髭の手入れ</div>
+            <div class="score-row__sub">外見軸 01</div>
+          </div>
+          <div class="score-row__cell">
+            <span class="score-row__num">4.2</span>
+            <span class="score-row__cap">/ 5</span>
+          </div>
+          <div class="score-row__cell">
+            <span class="score-row__num">2.1</span>
+            <span class="score-row__cap">/ 5</span>
+          </div>
+          <div class="score-row__cell">
+            <span class="gap-badge gap-badge--neg">−2.1</span>
+          </div>
+        </div>
+
+        <div class="score-row">
+          <div>
+            <div class="score-row__name">会話の展開・傾聴力</div>
+            <div class="score-row__sub">会話軸 02</div>
+          </div>
+          <div class="score-row__cell">
+            <span class="score-row__num">2.8</span>
+            <span class="score-row__cap">/ 5</span>
+          </div>
+          <div class="score-row__cell">
+            <span class="score-row__num">2.4</span>
+            <span class="score-row__cap">/ 5</span>
+          </div>
+          <div class="score-row__cell">
+            <span class="gap-badge gap-badge--neg">−0.4</span>
+          </div>
+        </div>
+
+        <div class="score-row">
+          <div>
+            <div class="score-row__name">余裕・立ち居振る舞い</div>
+            <div class="score-row__sub">態度軸 03</div>
+          </div>
+          <div class="score-row__cell">
+            <span class="score-row__num">2.5</span>
+            <span class="score-row__cap">/ 5</span>
+          </div>
+          <div class="score-row__cell">
+            <span class="score-row__num">1.9</span>
+            <span class="score-row__cap">/ 5</span>
+          </div>
+          <div class="score-row__cell">
+            <span class="gap-badge gap-badge--neg">−0.6</span>
+          </div>
+        </div>
+
+        <div class="score-row">
+          <div>
+            <div class="score-row__name">場の設計・デートプラン力</div>
+            <div class="score-row__sub">場づくり軸 04</div>
+          </div>
+          <div class="score-row__cell">
+            <span class="score-row__num">3.1</span>
+            <span class="score-row__cap">/ 5</span>
+          </div>
+          <div class="score-row__cell">
+            <span class="score-row__num">3.3</span>
+            <span class="score-row__cap">/ 5</span>
+          </div>
+          <div class="score-row__cell">
+            <span class="gap-badge gap-badge--pos">+0.2</span>
+          </div>
+        </div>
+
+        <div class="dual-card__footer">
+          ギャップ＝自己評価と女性評価のズレ。マイナスが大きいほど「気づいていない課題」<br>※ 表示中の数値はモデルケースのサンプルです
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- =============================================
+       5. ビフォーアフター（最重要）
+  ============================================= -->
+  <section class="beforeafter" id="beforeafter">
+    <div class="beforeafter__top">
+      <p class="beforeafter__pre">Before / After</p>
+      <h2 class="beforeafter__heading">
+        3ヶ月で、<span class="marker">何が変わったか。</span>
+      </h2>
+      <p class="beforeafter__sub">
+        スコアが変わる前に、行動が変わる。行動が変わる前に、「直す場所がわかる」が変わる。
+      </p>
+    </div>
+
+    <img
+      src="images/beforeafter.png" loading="lazy"
+      alt="左：猫背・無造作ヘアの男性。右：同じ男性が整えられた服装・自信ある立ち姿に変化"
+      class="beforeafter__photo"
+    >
+
+    <div class="beforeafter__data">
+      <div class="beforeafter__data-inner">
+
+        <!-- スコア遷移・内訳バー -->
+        <div>
+          <div class="ba-score">
+            <div class="ba-score__num">
+              <div class="ba-score__val ba-score__val--before">54</div>
+              <div class="ba-score__label">入会時</div>
+            </div>
+            <div class="ba-score__arrow">→</div>
+            <div class="ba-score__num">
+              <div class="ba-score__val ba-score__val--after">76</div>
+              <div class="ba-score__label">3ヶ月後</div>
+            </div>
+            <div class="ba-score__period">+22点</div>
+          </div>
+
+          <div class="ba-bars">
+            <div class="ba-bar">
+              <div class="ba-bar__head">
+                <span class="ba-bar__name">清潔感</span>
+                <span class="ba-bar__vals">2.1 → 3.8</span>
+              </div>
+              <div class="ba-bar__track">
+                <div class="ba-bar__before" style="width:42%"></div>
+                <div class="ba-bar__after" style="width:76%"></div>
+              </div>
+            </div>
+            <div class="ba-bar">
+              <div class="ba-bar__head">
+                <span class="ba-bar__name">会話・傾聴</span>
+                <span class="ba-bar__vals">2.4 → 3.5</span>
+              </div>
+              <div class="ba-bar__track">
+                <div class="ba-bar__before" style="width:48%"></div>
+                <div class="ba-bar__after" style="width:70%"></div>
+              </div>
+            </div>
+            <div class="ba-bar">
+              <div class="ba-bar__head">
+                <span class="ba-bar__name">余裕・立ち居振る舞い</span>
+                <span class="ba-bar__vals">1.9 → 3.2</span>
+              </div>
+              <div class="ba-bar__track">
+                <div class="ba-bar__before" style="width:38%"></div>
+                <div class="ba-bar__after" style="width:64%"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ストーリー -->
+        <div class="ba-story">
+          <blockquote class="ba-story__quote">
+            最初の診断で、自分が思っていた点と女性の採点が
+            一番ズレてたのは「清潔感」だった。ショックだった。
+            でも、直す場所がわかれば、あとはやるだけだった。
+          </blockquote>
+          <p class="ba-story__attr">K.Tさん・27歳・IT営業 / 3ヶ月でスコア54→76</p>
+          <div class="ba-story__note">
+            ※ 写真・数値はプログラム設計に基づくモデルケースです。
+            個人の結果は環境・取り組み方によって異なります。
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- =============================================
+       6. 体験者の声
+  ============================================= -->
+  <section class="voices" id="voices">
+    <div class="voices__inner">
+      <p class="voices__pre">Voices</p>
+      <h2 class="voices__heading">
+        変わった人の、<span class="marker">正直な話。</span>
+      </h2>
+
+      <div class="voices__grid">
+
+        <div class="voice-card">
+          <img
+            src="images/voice1.png"
+            alt="27歳・営業マン、街中で笑顔の男性"
+            class="voice-card__photo"
+            loading="lazy"
+          >
+          <div class="voice-card__body">
+            <p class="voice-card__quote">
+              「俺、清潔感だけはあると思ってた」が、一番の減点項目だった。
+              トレーナーに数字で見せられて、初めてちゃんと向き合えた。
+              直したら初回デートの空気が<strong>明らかに変わった。</strong>
+            </p>
+            <div class="voice-card__meta">
+              <p class="voice-card__name">R.Mさん・27歳・営業職</p>
+              <p class="voice-card__detail">3ヶ月参加 / スコア +19</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="voice-card">
+          <img
+            src="images/voice2.png"
+            alt="31歳・エンジニア、眼鏡をかけてカフェにいる男性"
+            class="voice-card__photo"
+            loading="lazy"
+          >
+          <div class="voice-card__body">
+            <p class="voice-card__quote">
+              会話の沈黙が怖くて、ずっと埋めようとしてた。
+              「沈黙はマイナスじゃない」をトレーナーの採点で確認できたのがでかい。
+              それだけで、変に力まなくなった。
+            </p>
+            <div class="voice-card__meta">
+              <p class="voice-card__name">T.Kさん・31歳・エンジニア</p>
+              <p class="voice-card__detail">4ヶ月参加 / 現在交際中</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="voice-card">
+          <img
+            src="images/voice3.png"
+            alt="24歳・大学院生、公園で自然な笑顔の男性"
+            class="voice-card__photo"
+            loading="lazy"
+          >
+          <div class="voice-card__body">
+            <p class="voice-card__quote">
+              彼女いない歴＝年齢でした。
+              半年で、人生で初めて「また会いたい」と言われた。
+              正直、自分でもびっくりした。
+            </p>
+            <div class="voice-card__meta">
+              <p class="voice-card__name">Y.Nさん・24歳・大学院生</p>
+              <p class="voice-card__detail">6ヶ月フルプログラム参加</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <p class="voices__note">※ 写真・体験談はプログラム設計に基づくモデルケースです。個人の結果は異なります。</p>
+    </div>
+  </section>
+
+  <!-- =============================================
+       7. プログラム内容
+  ============================================= -->
+  <section class="program" id="program">
+    <div class="program__inner">
+      <p class="program__pre">Program</p>
+      <h2 class="program__heading">
+        5つの処方手段で、<br>
+        スコアを動かす。
+      </h2>
+      <p class="program__lead">
+        知識を入れるだけのプログラムじゃない。
+        現実の行動が変わるまで、5つの手段を組み合わせて使う。
+      </p>
+
+      <!-- ジグザグ1：女性トレーナーの答え合わせ -->
+      <div class="program__feature">
+        <div class="program__feature-img">
+          <img
+            src="images/session.png"
+            alt="女性トレーナーがカフェでタブレットを見せながらフィードバックしている様子"
+            loading="lazy"
+          >
+        </div>
+        <div>
+          <p class="program__feature-pre">処方 01</p>
+          <h3 class="program__feature-heading">
+            女性トレーナーの<br>
+            <span class="marker">答え合わせセッション。</span>
+          </h3>
+          <p class="program__feature-body">
+            「なぜそのスコアになったか」をトレーナーが言語化して返す。
+            ここが他のサービスにない核心だ。採点結果を受け取るだけでなく、
+            「どの行動を、どう変えるか」まで一緒に考える。
+            最初はリモート動画採点から。いきなり対面はない。
+          </p>
+        </div>
+      </div>
+
+      <!-- ジグザグ2：合宿（反転） -->
+      <div class="program__feature program__feature--reverse">
+        <div class="program__feature-img">
+          <img
+            src="images/camp.png"
+            alt="男性4人が参加するMOTE LABの合宿・ワークショップ風景"
+            loading="lazy"
+          >
+        </div>
+        <div>
+          <p class="program__feature-pre">処方 05</p>
+          <h3 class="program__feature-heading">
+            実地セッション＋<br>
+            <span class="marker">合宿で体に染み込ませる。</span>
+          </h3>
+          <p class="program__feature-body">
+            頭で理解しても、体が反応しなければ意味がない。
+            月1回の実地セッションと合宿で、知識を「動けるスキル」に変換する。
+            実際の場面を再現した環境で、フィードバックループを回す。
+          </p>
+        </div>
+      </div>
+
+      <!-- コンパクト3つ -->
+      <div class="program__compact">
+        <div class="program-item">
+          <p class="program-item__num">処方 02</p>
+          <h3 class="program-item__title">動画教材 24本</h3>
+          <p class="program-item__body">
+            59項目の採点軸に対応した解説動画を自分のペースで視聴。
+            「何が評価されているか」を理解してから動く。
+          </p>
+        </div>
+        <div class="program-item">
+          <p class="program-item__num">処方 03</p>
+          <h3 class="program-item__title">週次セルフワーク</h3>
+          <p class="program-item__body">
+            日常の中で行動記録をつけ、セッションまでに「気づき」を言語化する。
+            書くことで、変化を自覚できる。
+          </p>
+        </div>
+        <div class="program-item">
+          <p class="program-item__num">処方 04</p>
+          <h3 class="program-item__title">月次フィードバック</h3>
+          <p class="program-item__body">
+            毎月スコアを再測定して伸びを確認。
+            停滞していれば原因を特定して処方を変える。
+            感覚頼みで進まない。
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =============================================
+       8. 流れ（無料診断→M6）
+  ============================================= -->
+  <section class="flow" id="flow">
+    <div class="flow__inner">
+      <p class="flow__pre">Journey</p>
+      <h2 class="flow__heading">
+        無料診断から、<br>6ヶ月の変化まで。
+      </h2>
+
+      <div class="flow__steps">
+
+        <div class="flow-step flow-step--highlight">
+          <div class="flow-step__node">
+            <span class="flow-step__m">無料</span>
+          </div>
+          <p class="flow-step__title">MOTEスコア<br>無料診断</p>
+          <p class="flow-step__body">まず現在地を知る。診断だけで終わってもいい</p>
+        </div>
+
+        <div class="flow-step">
+          <div class="flow-step__node">
+            <span class="flow-step__m">入会</span>
+          </div>
+          <p class="flow-step__title">プログラム<br>スタート</p>
+          <p class="flow-step__body">料金・スケジュール確認後に開始</p>
+        </div>
+
+        <div class="flow-step">
+          <div class="flow-step__node">
+            <span class="flow-step__m">M0</span>
+          </div>
+          <p class="flow-step__title">フル診断<br>59項目</p>
+          <p class="flow-step__body">自己採点＋トレーナー採点を同時実施</p>
+        </div>
+
+        <div class="flow-step">
+          <div class="flow-step__node">
+            <span class="flow-step__m">M1〜5</span>
+          </div>
+          <p class="flow-step__title">教材・FB・<br>実地セッション</p>
+          <p class="flow-step__body">月次スコア更新。処方を都度調整</p>
+        </div>
+
+        <div class="flow-step">
+          <div class="flow-step__node">
+            <span class="flow-step__m">M6</span>
+          </div>
+          <p class="flow-step__title">卒業<br>Before/After</p>
+          <p class="flow-step__body">数字で変化を確認して卒業</p>
+        </div>
+
+      </div>
+
+      <p class="flow__note">
+        <strong>いつでも辞められる</strong>プログラムだ。
+        卒業が目的なので、目標を達成したら終わりにしていい。
+        1ヶ月でも3ヶ月でも、スコアが動いた時点で成果だ。
+      </p>
+    </div>
+  </section>
+
+  <!-- =============================================
+       9. FAQ
+  ============================================= -->
+  <section class="faq" id="faq">
+    <div class="faq__inner">
+      <p class="faq__pre">FAQ</p>
+      <h2 class="faq__heading">よくある疑問、<br>正直に答える。</h2>
+
+      <details class="faq-item">
+        <summary class="faq-item__q">怪しくないですか？</summary>
+        <p class="faq-item__a">
+          正直、怪しく見えると思う。だからこそ仕組みを全部公開している。
+          採点は複数の女性トレーナーによる独立評価で集計し、特定個人との関係性が生まれる設計にはなっていない。
+          運営はすべて株式会社MoteLabが管理する。
+          契約の線引きも明確で、セッション外での連絡・個人的な交流は禁止している。
+          「透明性がある怪しさ」が気になるなら、まず無料診断だけ受けてみてほしい。
+        </p>
+      </details>
+
+      <details class="faq-item">
+        <summary class="faq-item__q">女性と話すのが苦手でも大丈夫ですか？</summary>
+        <p class="faq-item__a">
+          大丈夫だ。最初はリモートの動画採点から始まる。いきなり対面はない。
+          自分の日常行動を動画に撮ってトレーナーに送るところから始まるので、
+          「女性の前で緊張する」という状況は最初にはない。
+          徐々に実地のセッションに移行する設計になっている。
+        </p>
+      </details>
+
+      <details class="faq-item">
+        <summary class="faq-item__q">顔に自信がなくても変われますか？</summary>
+        <p class="faq-item__a">
+          変われる。59項目のうち顔の造形は1項目もない。
+          MOTE LABが測っているのは、すべて「行動」だ。
+          清潔感、表情、会話のリズム、空間の使い方——これらはすべて後から身につく。
+          顔の話をしたいなら、別のサービスを選んでほしい。ここは違う。
+        </p>
+      </details>
+
+      <details class="faq-item">
+        <summary class="faq-item__q">料金はいくらですか？</summary>
+        <p class="faq-item__a">
+          無料診断のあとに案内している。診断だけで終わってもいい。
+          料金を先に知りたい気持ちはわかるが、スコアを見てから判断してほしいのが正直なところだ。
+          あなたの現在地とプログラムの内容が合わなければ、入会を勧めない。
+        </p>
+      </details>
+
+      <details class="faq-item">
+        <summary class="faq-item__q">彼女ができたら辞められますか？</summary>
+        <p class="faq-item__a">
+          いつでも辞められる。むしろ、そのために参加してほしい。
+          このプログラムの目的は「卒業」だ。
+          関係性を作るのはあなただし、MOTE LABはそこに関与しない。
+          スコアが変わって、自分で動けるようになったら、卒業していい。
+        </p>
+      </details>
+
+    </div>
+  </section>
+
+  <!-- =============================================
+       10. 最後のCTA
+  ============================================= -->
+  <section class="cta-final" id="cta-final">
+    <div class="cta-final__bg-circle cta-final__bg-circle--1"></div>
+    <div class="cta-final__inner">
+      <p class="cta-final__pre">Free Diagnosis</p>
+      <h2 class="cta-final__heading">
+        3年後も同じことで悩んでいるか、<br>
+        <em>3ヶ月で数字を変えるか。</em>
+      </h2>
+      <p class="cta-final__sub">
+        まず、現在地を知ることだ。無料診断は15分で終わる。<br>
+        診断だけで終わってもいい。でも知った後は、動ける。
+      </p>
+      <a href="#" class="btn-gold"><!-- TODO: 公開前に無料診断フォームのURLを設定 -->無料でMOTEスコア診断を受ける</a>
+      <p class="cta-final__note">クレジットカード不要・無料で診断が完了します</p>
+    </div>
+  </section>
+
+  <!-- =============================================
+       11. Footer
+  ============================================= -->
+  <footer class="footer">
+    <div class="footer__inner">
+      <div>
+        <div class="footer__logo">MOTE LAB</div>
+        <p class="footer__company">運営：株式会社MoteLab</p>
+      </div>
+      <ul class="footer__links">
+        <li><a href="#">トレーナー募集</a></li>
+        <li><a href="privacy.html">プライバシーポリシー</a></li>
+        <li><a href="tokushoho.html">特定商取引法に基づく表記</a></li>
+        <li><a href="#">お問い合わせ</a></li>
+      </ul>
+    </div>
+    <div class="footer__inner">
+      <p class="footer__copy">&copy; 2026 株式会社MoteLab. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <!-- =============================================
+       JS：固定CTAバー・スクロール出現
+  ============================================= -->
+  <script>
+    (function() {
+      var bar = document.getElementById('stickyBar');
+      var heroH = 0;
+
+      function update() {
+        heroH = window.innerHeight * 0.7;
+        if (window.scrollY > heroH) {
+          bar.classList.add('visible');
+        } else {
+          bar.classList.remove('visible');
+        }
+      }
+
+      window.addEventListener('scroll', update, { passive: true });
+      update();
+    })();
+  </script>
+
+</body>
+</html>
