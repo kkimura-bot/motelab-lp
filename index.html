@@ -1324,6 +1324,216 @@
     }
 
     /* =============================================
+       相談フォームセクション
+    ============================================= */
+    .soudan {
+      background: var(--white);
+      padding: 100px 24px;
+      border-top: 1px solid var(--border);
+    }
+
+    .soudan__inner {
+      max-width: 640px;
+      margin: 0 auto;
+    }
+
+    .soudan__pre {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 12px;
+    }
+
+    .soudan__heading {
+      font-size: clamp(22px, 3vw, 34px);
+      font-weight: 900;
+      color: var(--navy);
+      line-height: 1.4;
+      margin-bottom: 16px;
+    }
+
+    .soudan__lead {
+      font-size: 15px;
+      color: var(--muted);
+      line-height: 1.85;
+      margin-bottom: 48px;
+    }
+
+    /* LINE誘導バナー */
+    .soudan__line-wrap {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      background: var(--offwhite);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px 24px;
+      margin-bottom: 48px;
+    }
+
+    .soudan__line-label {
+      font-size: 13px;
+      color: var(--muted);
+      flex: 1;
+      line-height: 1.6;
+    }
+
+    .soudan__line-btn {
+      display: inline-block;
+      background: var(--navy);
+      color: var(--white);
+      font-size: 13px;
+      font-weight: 700;
+      padding: 12px 24px;
+      border-radius: 100px;
+      white-space: nowrap;
+      letter-spacing: 0.03em;
+      transition: opacity 0.2s;
+      flex-shrink: 0;
+    }
+
+    .soudan__line-btn:hover { opacity: 0.85; }
+
+    .soudan__divider {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 40px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .soudan__divider::before,
+    .soudan__divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* フォーム本体 */
+    .apply-form {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .apply-form .field {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .apply-form label {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--navy);
+      letter-spacing: 0.03em;
+    }
+
+    .apply-form .req {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 700;
+      background: var(--navy);
+      color: var(--white);
+      padding: 2px 6px;
+      border-radius: 4px;
+      margin-left: 6px;
+      vertical-align: middle;
+      letter-spacing: 0.04em;
+    }
+
+    .apply-form .opt {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 500;
+      color: var(--muted);
+      margin-left: 6px;
+      vertical-align: middle;
+    }
+
+    .apply-form input[type="text"],
+    .apply-form input[type="email"],
+    .apply-form textarea {
+      width: 100%;
+      font-family: var(--font);
+      font-size: 15px;
+      color: var(--text);
+      background: var(--offwhite);
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      padding: 14px 16px;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      -webkit-appearance: none;
+      appearance: none;
+    }
+
+    .apply-form input[type="text"]:focus,
+    .apply-form input[type="email"]:focus,
+    .apply-form textarea:focus {
+      border-color: var(--navy);
+      box-shadow: 0 0 0 3px rgba(31,58,95,0.08);
+      background: var(--white);
+    }
+
+    .apply-form textarea {
+      min-height: 120px;
+      resize: vertical;
+      line-height: 1.75;
+    }
+
+    .apply-form .consent {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.7;
+      cursor: pointer;
+    }
+
+    .apply-form .consent input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      margin-top: 2px;
+      flex-shrink: 0;
+      accent-color: var(--navy);
+      cursor: pointer;
+    }
+
+    .apply-form .consent a {
+      color: var(--navy);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
+    .apply-form .consent a:hover { opacity: 0.75; }
+
+    .apply-form .submit-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    .apply-form .btn-gold {
+      font-size: 15px;
+      padding: 16px 40px;
+      border: none;
+      cursor: pointer;
+    }
+
+    .apply-form .submit-note {
+      font-size: 11px;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    /* =============================================
        11. Footer
     ============================================= */
     .footer {
@@ -1382,6 +1592,16 @@
        レスポンシブ（768px）
     ============================================= */
     @media (max-width: 768px) {
+      .soudan__line-wrap {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+      }
+
+      .soudan__line-btn {
+        align-self: flex-start;
+      }
+
       .nav__logo span { display: none; }
 
       .hero__inner {
@@ -2122,6 +2342,87 @@
       </p>
       <a href="https://test.mote-lab.group" class="btn-gold">無料でMOTEスコア診断を受ける</a>
       <p class="cta-final__note">クレジットカード不要・無料で診断が完了します</p>
+    </div>
+  </section>
+
+  <!-- =============================================
+       相談フォーム
+  ============================================= -->
+  <section class="soudan" id="soudan">
+    <div class="soudan__inner">
+      <p class="soudan__pre">Contact</p>
+      <h2 class="soudan__heading">
+        診断の前に、聞きたいことがあるなら。
+      </h2>
+      <p class="soudan__lead">
+        「まだ診断に踏み切れない」「まず話を聞きたい」——そういう気持ち、全然おかしくない。<br>
+        気軽に送ってほしい。返信は必ずする。
+      </p>
+
+      <!-- LINE誘導 -->
+      <div class="soudan__line-wrap">
+        <p class="soudan__line-label">すぐに話したいなら、LINEの方が早い。</p>
+        <a href="https://lin.ee/QVKHSTm" target="_blank" rel="noopener" class="soudan__line-btn">公式LINEで話す</a>
+      </div>
+
+      <div class="soudan__divider">または、フォームで送る</div>
+
+      <form
+        name="lp-soudan"
+        method="POST"
+        data-netlify="true"
+        netlify-honeypot="bot-field"
+        action="/thanks.html"
+        class="apply-form"
+      >
+        <input type="hidden" name="form-name" value="lp-soudan" />
+        <p hidden><label>記入しないでください: <input name="bot-field" /></label></p>
+
+        <div class="field">
+          <label for="soudan-name">お名前<span class="req">必須</span></label>
+          <input
+            type="text"
+            id="soudan-name"
+            name="名前"
+            placeholder="山田 太郎"
+            required
+            autocomplete="name"
+          >
+        </div>
+
+        <div class="field">
+          <label for="soudan-contact">連絡先（メール・LINE・SNSなど）<span class="req">必須</span></label>
+          <input
+            type="text"
+            id="soudan-contact"
+            name="連絡先"
+            placeholder="例：example@email.com、@handle"
+            required
+            autocomplete="email"
+          >
+        </div>
+
+        <div class="field">
+          <label for="soudan-body">相談内容<span class="opt">任意</span></label>
+          <textarea
+            id="soudan-body"
+            name="相談内容"
+            placeholder="「自分のどこが問題なのかわからない」「まず話を聞きたい」など、なんでも。"
+          ></textarea>
+        </div>
+
+        <div class="field">
+          <label class="consent">
+            <input type="checkbox" name="プライバシー同意" value="同意する" required />
+            <span><a href="privacy.html" target="_blank" rel="noopener">プライバシーポリシー</a>に同意のうえ送信します。</span>
+          </label>
+        </div>
+
+        <div class="submit-wrap">
+          <button type="submit" class="btn-gold">送信する</button>
+          <p class="submit-note">内容を確認のうえ、2営業日以内にご連絡します。</p>
+        </div>
+      </form>
     </div>
   </section>
 
